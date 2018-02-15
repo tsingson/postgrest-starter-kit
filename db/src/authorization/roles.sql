@@ -6,7 +6,7 @@
 -- the role used by postgrest to connect to the database
 -- notice how this role does not have any privileges attached specifically to it
 -- it can only switch to other roles
-drop role if exists :authenticator;
+--- drop role if exists :authenticator;
 create role :"authenticator" with login password :'authenticator_pass';
 
 -- this is an application level role

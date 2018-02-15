@@ -8,9 +8,7 @@ services:
   # use a separate database instance, like Amazon RDS, i.e. in production this section will be
   # commented and in the .env file you will specify the ip of your separate database instance
   db:
-    image: postgres:10.2-alpine
-    # container_name: 9.6.7-alpine
-    container_name: 10.2-alpine
+    image: postgres:9.6
     ports:
       - "5432:5432"
     environment:
@@ -36,18 +34,17 @@ services:
   # and providing a REST api, (almost) every request that is sent to the database goes through it
   postgrest:
     image: postgrest/postgrest
-    container_name: postgrest
     ports:
       - "3000:3000"
     links:
       - db:db
     environment:
       - PGRST_DB_URI=postgres://${DB_USER}:${DB_PASS}@${DB_HOST}:${DB_PORT}/${DB_NAME}
-      - PGRST_DB_SCHEMA=${DB_SCHEMA}
+      - PGRST_DB_SCHEMA=${DB_SCHEMA} 
       - PGRST_DB_ANON_ROLE=${DB_ANON_ROLE}
-      - PGRST_DB_POOL=${DB_POOL}
-      - PGRST_JWT_SECRET=${JWT_SECRET}
-      - PGRST_MAX_ROWS=${MAX_ROWS}
+      - PGRST_DB_POOL=${DB_POOL} 
+      - PGRST_JWT_SECRET=${JWT_SECRET}  
+      - PGRST_MAX_ROWS=${MAX_ROWS} 
       - PGRST_PRE_REQUEST=${PRE_REQUEST}
       - PGRST_SERVER_PROXY_URI=${SERVER_PROXY_URI}
 
@@ -57,7 +54,6 @@ services:
   # to PostgREST down the stack.
   openresty:
     image: openresty/openresty:jessie
-    container_name: openresty-jessie
     ports:
       - "8080:80"
     links:
@@ -86,7 +82,6 @@ services:
   # to RabbitMQ based on the BRIDGE_CHANNELS configuration
   pg_amqp_bridge:
     image: subzerocloud/pg-amqp-bridge
-    container_name: pg-amqp-bridge
     links:
       - db
       - rabbitmq
@@ -100,7 +95,6 @@ services:
   # You can connect here with different consumers and take actions based on those events (like sending signup emails)
   rabbitmq:
     image: rabbitmq:3-management
-    container_name: rebbitmq-3-management
     ports:
       - "5671:5671"
       - "5672:5672"
